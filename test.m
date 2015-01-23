@@ -23,11 +23,11 @@ sigma=10.^(-SNR/20); % ecart-type du bruit correspondant
 
 %h=[1;0.5]; % CANAL TEST 1
 %h=[1;0.1;0.9].'; % CANAL TEST 2
-%h=[0.5;0.8;0.5]; % CANAL TEST 3
+h=[0.5;0.8;0.5]; % CANAL TEST 3
 
 K=length(h); % longueur du canal
-P= ; % ordre des filtres ZF/MMSE/DFE (filtre direct), A COMPLETER
-Q= ; % ordre du filtre de retour DFE, A COMPLETER
+P= 1; % ordre des filtres ZF/MMSE/DFE (filtre direct), A COMPLETER
+Q= 1; % ordre du filtre de retour DFE, A COMPLETER
 
 %% Simulation des signaux
 
@@ -48,19 +48,20 @@ berDFE=zeros(1,length(SNR)); % BER après DFE
 
 for i=1:length(SNR) 
     
-    y=  ; % Observations en sortie du canal, A COMPLETER
+    y =  filter(h, 1, s); % Observations en sortie du canal, A COMPLETER
+    y = y(K:end);
     
     % Filtre ZF
-    dZF= ; % retard optimal du filtre ZF, A COMPLETER
-    fZF= ; % vecteur colonne des coefficients du filtre ZF, A COMPLETER
+    dZF= 0; % retard optimal du filtre ZF, A COMPLETER
+    fZF= 0; % vecteur colonne des coefficients du filtre ZF, A COMPLETER
     
     % Filtre MMSE
-    dMMSE= ; % retard optimal du filtre MMSE, A COMPLETER
-    fMMSE= ;  % vecteur colonne des coefficients du filtre MMSE, A COMPLETER
+    dMMSE= 0; % retard optimal du filtre MMSE, A COMPLETER
+    fMMSE= 0;  % vecteur colonne des coefficients du filtre MMSE, A COMPLETER
     
     % Filtre DFE
-    dDFE= ; % retard optimal du filtre DFE, A COMPLETER
-    fDFE= ; % coefficients du filtre DFE, A COMPLETER
+    dDFE= 0; % retard optimal du filtre DFE, A COMPLETER
+    fDFE= 0; % coefficients du filtre DFE, A COMPLETER
     
     % Egalisation ZF/MMSE
     for n=P+K-1:N 
@@ -86,14 +87,17 @@ for i=1:length(SNR)
 end
 
 %% Graphes
+Nfft = 512;
 
 % Fonction de transfert canal/ZF
-% A COMPLETER
+plot((1:Nfft)/Nfft - 0.5, fftshift(abs(fft(h,Nfft))));
+title('Reponse en frequence du filtre canal');
+xlabel('Frequence normalisee'); ylabel('Amplitude');
 
-% Constellation des échantillons reçus y(n)
-% A COMPLETER
+%% Constellation des échantillons reçus y(n)
+scatterplot(y);
 
-% Courbes de BER
+%% Courbes de BER
 % Probabilité d'erreur du canal AWGN = Q(sqrt(2 Eb/N0)), où Eb=1 et N0 = sigma^2
 figure;
 semilogy(SNR,berZF,'-b^',SNR,berMMSE,'-rd',SNR,berDFE,'-gv',SNR,1-normcdf(sqrt(2./sigma.^2),0,1),'k-','LineWidth',3);
