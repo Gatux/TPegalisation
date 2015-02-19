@@ -1,0 +1,210 @@
+\documentclass[11pt]{article}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\usepackage{layout}
+\usepackage{ucs}
+\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage{fourier}
+\usepackage[T1]{fontenc}
+\usepackage{enumitem}
+\usepackage[frenchb]{babel}
+\usepackage{pgfplots}
+
+
+
+\title{\textbf{Compte rendu de TP - TS217}\\Performances des égaliseurs linéaires et non-linéaires}
+\author{Maxime PETERLIN - \texttt{maxime.peterlin@enseirb-matmeca.fr}\\
+Gabriel VERMEULEN - \texttt{gabriel@vermeulen.email} \\\\{ENSEIRB-MATMECA, Bordeaux}}
+\date{19 janvier 2014}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Les réseaux de communication sans fil apportent aujourd'hui de nombreux avantages tels que des déploiements facilités et à coûts réduits, cependant de nombreuses limitations viennent altérer leur fonctionnement. En effet, les ondes transportant l'information sont perturbés et voient leur puissance diminuer au cours de leur propagation de l'émetteur au récepteur. 
+\\
+\\
+Cela est dû à quatre causes principales :
+\begin{itemize}
+	\item la distance entre l'émetteur et le récepteur ;
+	\item l'environnement (obstacles sur le chemin de propagation, ondes parasites, etc...);
+	\item la mobilité du récepteur et/ou de l'émetteur ;
+	\item le multitrajet de l'onde (i.e. lorsque la même onde passe par des chemins différents et arrive à un même récepteur introduisant ainsi des interférences).\\
+\end{itemize}
+\\
+\\
+
+\newline
+Afin de caractériser un canal, on utilise $\Delta_{\tau}$ qui est l'étalement temporel du canal et $T_c$ le temps de cohérence du canal. On notera $T_s$ le temps symbole. Le canal de propagation peut être séléctif en temps et/ou en fréquence. 
+\\
+Le canal de propagation varie au cours du temps et la sélectivité en temps nous permet de savoir à quelle fréquence il est nécessaire de l'estimer afin de compenser ses effets. On dit qu'il est sélectif en temps si $T_s > T_c$, dans ce cas, on passe plus de temps à estimer le canal qu'à communiquer.
+\\
+Si le canal de propagation est sélectif en fréquence (i.e. $T_s < \Delta_{\tau}$), alors il introduit des distorsions sur le signal transmis. Le fait de diminuer le temps symbole et donc d'augmenter le débit va avoir pour effet de perturber le signal transmis, ce qui est problématique pour la mise en place de réseaux de communication sans fil à haut débit.
+\\
+
+En résumé, la condition devant être réalisée afin d'obtenir une transmission idéale sans distorsion et où l'on passe plus de temps à communiquer qu'à estimer le canal est 
+\[
+	\boxed{\Delta_{\tau} << T_s << T_c}
+\]
+Pour les communications sans fil terrestres, le canal est, en général, non sélectif en temps. Cependant, cette condition implique l'introduction d'une valeur maximale au débit pour un environnement de propagation donné. Si l'on veut augmenter le débit, il est nécessaire d'accepter l'introduction de distorsions qu'il faudra alors compenser. La condition à vérifier en général devient alors la suivante :
+\[
+	\boxed{T_s < \Delta_{\tau} < T_c}
+\]
+
+L'objectif de ce TP est justement la compensation de ces distorsions grâce à l'égalisation des signaux reçus. Pour cela nous implémenterons plusieurs méthodes permettant de réaliser cela.\\
+Pour la suite du rapport, on définit $\underline{S_n}$ le vecteur colonne des symboles envoyés, $\underline{W_n}$ le vecteur colonne du bruit introduit par le canal, $\underline{f}$ le vecteur colonne des coefficients du filtre ZF, $\underline{y_n}$ le vecteur colonne des données reçus et $Z_n$ le symbole reçu à l'instant $n$ (après égalisation).\\
+On part du principe que le canal $h$ est RIF et de longueur $K$, ainsi $H(z) = \sum\limits_{k=0}^{K-1}h_k z^{-k}$.\\
+L'égaliseur est ici de longueur P : $F(z) = \sum\limits_{p=0}^{P-1} \bar{f_p} z^{-p}$.\\
+D'une manière plus précise, on a
+\[
+	\underline{S_n} = \left[
+	\begin{array}[c] 
+		xS_n \\
+		\vdots \\
+		S_{n-(P+K-2)}
+	\end{array}
+	\right],\ 
+	\underline{W_n} = \left[
+	\begin{array}[c] 
+		xW_n \\
+		\vdots \\
+		W_{n-P+1}
+	\end{array}
+	\right],\ 
+	\underline{f} = \left[
+	\begin{array}[c] 
+		xf_0 \\
+		\vdots \\
+		f_{P-1}
+	\end{array}
+	\right],\  
+	\underline{y_n} = \left[
+	\begin{array}[c] 
+		xy_n \\
+		\vdots \\
+		y_{n-P+1}
+	\end{array}
+	\right]
+\]
+Lorsque les symboles $\underline{S_n}$ sont envoyés et qu'ils traversent le canal de propagation, les données reçues sont alors les suivantes :
+\[
+	\boxed{\underline{y_n} = H\underline{S_n} + \underline{W_n}}
+\]
+où $H$ est la matrice de convolution du canal de taille $P \times (P+K-1)$
+\[
+	H
+	= \begin{pmatrix} 
+			h_{0} & \hdots & h_{K-1} & &0 \\
+			& \ddots & \ddots & \ddots & \\
+			0& & h_0 & \cdots & h_{K-1} \\
+\end{pmatrix}
+\]
+Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la relation
+\[
+	\boxed{Z_n = \underline{f}^*\underline{y_n}}
+\]
+
+
+\section{Implémentation des signaux reçus}
+	
+	Ce TP se base sur trois canaux de propagation. Dans un premier temps, nous étudierons leur réponse fréquentielle, ainsi que leur effet sur la transmission de symboles par leur biais.
+	\\
+	Les trois canaux considérés ici, et que l'on nommera $h_1$, $h_2$ et $h_3$, possèdent les réponses fréquentielles qui suivent.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.6]{img/rf.png}
+		\caption{Réponses fréquentielles des trois canaux $h_1$, $h_2$ et $h_3$}
+	\end{figure}
+	\\
+	On remarque que les canaux présentent différentes sélectivités en fréquence avec $h_1$ le moins sélectif et $h_3$ le plus sélectif.
+	Nous allons à présent transmettre une séquence de $N=5000$ symboles BPSK à travers ces canaux avec un SNR de $20 dB$. On obtient alors les constellations suivantes :
+	\begin{figure}[H]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{img/const1.png}
+                \caption{Constellation de symboles après transmission via le canal $h_1$}
+        \end{subfigure}%
+				\hspace{0.4cm}
+        \begin{subfigure}[h]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{img/const2.png}
+                \caption{Constellation de symboles après transmission via le canal $h_2$}
+        \end{subfigure}%
+				\hspace{0.4cm}
+        \begin{subfigure}[h]{0.3\textwidth}
+                \includegraphics[width=\textwidth]{img/const3.png}
+                \caption{Constellation de symboles après transmission via le canal $h_3$}
+        \end{subfigure}%
+\end{figure}
+	On remarque qu'il y a de l'interférence entre symbole introduite par chaque canal. Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
+
+\section{Égaliseur ZF}
+	Le première méthode d'égalisation que nous allons implémenter est l'égaliseur ZF. Le principe de cette méthode est d'inverser la réponse fréquentielle $H(z)$ du canal considéré.\\
+	Le problème étant qu'une inversion de cette réponse peut potentiellement amplifier le bruit pour certaines plages de fréquences, c'est pourquoi on ne tiendra pas compte du bruit pour le filtre ZF.\\
+	Ainsi, en se basant sur les équations données dans l'introduction, on en déduit que
+\[
+	\boxed{Z_n = \underline{f}^*H\underline{S_n}}
+\]
+Le but final est d'obtenir $Z_n$. En se basant sur l'équation précédente, on trouve la relation permettant de concevoir le filtre ZF : 
+\[
+	H^*\underline{f} = \underline{e_{d+1}}}
+\]
+où $d$ est un retard à choisir.\\
+Le système obtenu est sur-déterminé et n'admet pas de solutions en général. En pratique, on cherche la solution au sens des moindres carrés. On cherche alors le vecteur $\underline{f}$ qui minimise la relation $\left\| H^*\underline{f} - \underline{e_{d+1}} \right\|$.
+
+La solution est alors
+\[
+	\boxed{\underline{f} = (H\cdot H^*)^{-1}H}
+\]
+\\
+\\
+
+Nous allons à présent voir comment notre implémentation du filtre ZF sur \textsc{MATLAB} gère les distorsions engendrées par les trois différents canaux utilisé dans le cadre de ce TP.
+%
+%	FIGFIGFIGFIGFIGFIGFIG
+%
+
+Les réponses fréquentielles des égaliseurs sont bien, comme on peut l'observer sur les figures, l'inverse des réponses des différents canaux. \\
+De plus, la forte sélectivité en fréquence des canaux se manifeste par des pics de résonnance dans la réponse fréquentielle des égaliseurs.
+%
+%	FIGFIGFIGFIGFIGFIGFIG
+%
+
+Pour ce qui est des performances de l'égaliseur, pour le premier canal la méthode semble relativement bien adaptée, même si l'on reste assez loin du TEB théorique sans IES représenté par la courbe du canal AWGN. Cependant, pour les canaux 2 et 3, même avec un SNR élevé il est difficile d'obtenir un TEB faible du fait de la forte sélectivité en fréquence de ces deux canaux.
+\\
+De plus, si l'on calcule l'énergie de l'IES en sortie de l'égaliseur dont l'expression théorique est la suivante
+\[ E[|\widetilde{\epsilon_n}|^{2}] = \left\| (I-H^{*}(HH^{*})^{-1}H)e_{d+1} \right\|^{2} \]
+On peut remarquer que si le filtre est sélectif en fréquence alors l'énergie de l'IES sera d'autant plus grande.
+En effet,
+\begin{itemize}
+%
+%	TODOTODOTODOTODOTODOTODOTODO
+%
+\end{itemize}
+
+
+\section{Égaliseur MMSE}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+
+
+\end{document}
