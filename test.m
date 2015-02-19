@@ -22,12 +22,12 @@ sigma=10.^(-SNR/20); % ecart-type du bruit correspondant
 %h=[0.227 0.460 0.688 0.460 0.227]; % Canal Proakis C
 
 %h=[1;0.5]; % CANAL TEST 1
-%h=[1;0.1;0.9].'; % CANAL TEST 2
-h=[0.5;0.8;0.5]; % CANAL TEST 3
+h=[1;0.1;0.9].'; % CANAL TEST 2
+%h=[0.5;0.8;0.5]; % CANAL TEST 3
 
 K=length(h); % longueur du canal
-P= 1; % ordre des filtres ZF/MMSE/DFE (filtre direct), A COMPLETER
-Q= 1; % ordre du filtre de retour DFE, A COMPLETER
+P= 50; % ordre des filtres ZF/MMSE/DFE (filtre direct), A COMPLETER
+Q= 20; % ordre du filtre de retour DFE, A COMPLETER
 
 %% Simulation des signaux
 
@@ -46,14 +46,30 @@ zDFE=zeros(N,length(SNR)); % sortie de l'égaliseur DFE
 bitsDFE=zeros(N,length(SNR)); % bits estimés après DFE
 berDFE=zeros(1,length(SNR)); % BER après DFE
 
+% Generation du bruit
+
+% Filtre ZF
+% Matrice H
+H = conv2(h, eye(P))';
+
+% Retard optimal
+X = H'*(inv(H*H'))*H;
+for k=1:P+K-1
+   Phi(k) = norm(X(:,k)); 
+end
+
+[~, dZF] = max(Phi);
+eZF=zeros(P+K-1,1);
+eZF(dZF)=1;
+Eies=norm(eZF)-norm((H')*(pinv(H)')*eZF);
+
+fZF= (pinv(H)')*eZF;
+%%
 for i=1:length(SNR) 
     
-    y =  filter(h, 1, s); % Observations en sortie du canal, A COMPLETER
-    y = y(K:end);
-    
-    % Filtre ZF
-    dZF= 0; % retard optimal du filtre ZF, A COMPLETER
-    fZF= 0; % vecteur colonne des coefficients du filtre ZF, A COMPLETER
+    %y =  filter(h, 1, s); % Observations en sortie du canal, A COMPLETER
+    %y = y(K:end);
+    y= awgn(filter(h,1,s),SNR(i)); % Observations en sortie du canal
     
     % Filtre MMSE
     dMMSE= 0; % retard optimal du filtre MMSE, A COMPLETER
@@ -66,33 +82,39 @@ for i=1:length(SNR)
     % Egalisation ZF/MMSE
     for n=P+K-1:N 
         zZF(n,i)=real(fZF'*y(n:-1:n-P+1));
-        zMMSE(n,i)=real(fMMSE'*y(n:-1:n-P+1));  
+        %zMMSE(n,i)=real(fMMSE'*y(n:-1:n-P+1));  
     end
     bitsZF(:,i)=real(zZF(:,i)) > 0; 
     berZF(:,i)=sum(abs(bits(P+K-1-(dZF-1):N-(dZF-1))-bitsZF(P+K-1:N,i)),1)/(N-(P+K-2)); 
-    bitsMMSE(:,i)=real(zMMSE(:,i)) > 0; 
-    berMMSE(i)=sum(abs(bits(P+K-1-(dMMSE-1):N-(dMMSE-1))-bitsMMSE(P+K-1:N,i)),1)/(N-(P+K-2)); 
+    %bitsMMSE(:,i)=real(zMMSE(:,i)) > 0; 
+    %berMMSE(i)=sum(abs(bits(P+K-1-(dMMSE-1):N-(dMMSE-1))-bitsMMSE(P+K-1:N,i)),1)/(N-(P+K-2)); 
     
     % Egalisation DFE
-    M=max(P+K-1,Q+dDFE+1);
-    sh=zeros(N,1);
-    sh(1:M)=s(1:M).'; % initialisation des symboles estimés précédents
-    for n=M:N
-        zDFE(n,i)=real(fDFE'*[y(n:-1:n-P+1);sh(n-1-(dDFE-1):-1:n-(dDFE-1)-Q)]);
-        sh(n-(dDFE-1))=2*(real(zDFE(n,i)) > 0)-1; % Estimation du symbole BPSK émis  
-        %sh(n-(dDFE(i)-1))=s(n-(dDFE(i)-1)); % si estimation parfaite
-    end 
-    bitsDFE(:,i)=real(zDFE(:,i)) > 0; 
-    berDFE(i)= sum(abs(bits(M-(dDFE-1):N-(dDFE-1))-bitsDFE(M:N,i)),1)/(N-M); 
+%     M=max(P+K-1,Q+dDFE+1);
+%     sh=zeros(N,1);
+%     sh(1:M)=s(1:M).'; % initialisation des symboles estimés précédents
+%     for n=M:N
+%         zDFE(n,i)=real(fDFE'*[y(n:-1:n-P+1);sh(n-1-(dDFE-1):-1:n-(dDFE-1)-Q)]);
+%         sh(n-(dDFE-1))=2*(real(zDFE(n,i)) > 0)-1; % Estimation du symbole BPSK émis  
+%         %sh(n-(dDFE(i)-1))=s(n-(dDFE(i)-1)); % si estimation parfaite
+%     end 
+%     bitsDFE(:,i)=real(zDFE(:,i)) > 0; 
+%     berDFE(i)= sum(abs(bits(M-(dDFE-1):N-(dDFE-1))-bitsDFE(M:N,i)),1)/(N-M); 
 end
 
 %% Graphes
 Nfft = 512;
 
 % Fonction de transfert canal/ZF
-plot((1:Nfft)/Nfft - 0.5, fftshift(abs(fft(h,Nfft))));
-title('Reponse en frequence du filtre canal');
+
+plot((1:Nfft)/Nfft - 0.5, fftshift(abs(fft(h1,Nfft))));
+title('Reponse en frequence du filtre canal 1');
 xlabel('Frequence normalisee'); ylabel('Amplitude');
+hold on;
+plot((1:Nfft)/Nfft - 0.5, fftshift(abs(fft(fZF, Nfft))), 'r');
+title('Reponse en frequence du filtre canal 1');
+xlabel('Frequence normalisee'); ylabel('Amplitude');
+
 
 %% Constellation des échantillons reçus y(n)
 scatterplot(y);
@@ -109,3 +131,4 @@ legend('ZF','MMSE','DFE','AWGN','Location','SouthWest');
 
 
 
+%%
