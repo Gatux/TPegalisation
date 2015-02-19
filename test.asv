@@ -145,6 +145,5 @@ title('Performances de l''égaliseur avec le canal 1');
 
 %% Periodogrammes
 bruit = awgn(zeros(1,5000), 10);
-sortieCanal = filter(h, 1, bruit);
-sortieEgaliseur = filter(fZF, 1, sortieCanal);
+sortieEgaliseur = filter(fZF, 1, bruit);
 periodogram(sortieEgaliseur);
