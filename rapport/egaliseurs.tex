@@ -152,8 +152,8 @@ Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la 
                 \caption{Constellation de symboles après transmission via le canal $h_3$}
         \end{subfigure}%
 \end{figure}
-	On remarque que le canal 1 n'est que très peu touché par des interférences entre symbole et qu'il est tout de même possible de détecter sans erreur les symboles, à l'inverse des deux autre canaux. En effet le canal 2 possède une ambiguïté sur le symbole reçu en 0. Enfin le 3ème canal est très touché par ces interférences et certains symboles se retrouvent dans la mauvaise zone de détection ce qui entraîne des erreurs de décision.\\
-Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
+	On remarque que le canal 1 n'est que très peu touché par des interférences entre symboles et qu'il est tout de même possible de détecter sans erreur les symboles, à l'inverse des deux autre canaux. En effet le canal 2 possède une ambiguïté sur le symbole reçu en 0. Enfin le 3ème canal est très touché par ces interférences et certains symboles se retrouvent dans la mauvaise zone de détection ce qui entraîne des erreurs de décision.\\
+Le but des parties suivantes va être de se débarrasser de ces distorsions, afin de décoder le message envoyé. 
 
 \section{Égaliseur ZF}
 	Le première méthode d'égalisation que nous allons implémenter est l'égaliseur ZF. Le principe de cette méthode est d'inverser la réponse fréquentielle $H(z)$ du canal considéré.\\
@@ -251,7 +251,7 @@ Au vu des résultats précédents, on remarque que le filtre ZF, qui se base sur l'
 
 \section{Égaliseur MMSE}
 
-La seconde méthode employée est celle utilisant un filtre MMSE (Minimum Mean Square Error). Ce filtre a l'avantage de tenir compte du bruit, ce qui lui permet d'être plus performances que le filtre ZF. Le principe de ce filtre est de minimiser l'erreur quadratique moyenne entre la sortie de l'égaliseur et le symbole que l'on souhaite estimer. Cela se traduire par l'équation suivante :
+La seconde méthode employée est celle utilisant un filtre MMSE (Minimum Mean Square Error). Ce filtre a l'avantage de tenir compte du bruit, ce qui lui permet d'être plus performant que le filtre ZF. Le principe de ce filtre est de minimiser l'erreur quadratique moyenne entre la sortie de l'égaliseur et le symbole que l'on souhaite estimer. Cela se traduire par l'équation suivante :
 \[
 F(z) = \underbrace{argmin}_{\tilde{F}(z)}( E\left[ \left| \tilde{F}(z) \cdot y_{n}-S_{n-d} \right| ^{2}\right])
 \]
@@ -267,7 +267,7 @@ Avec :
 \[
 f = \left( H \cdot H^{*} + \sigma^{2} \cdot I \right)^{-1} H \cdot e_{d+1}
 \]
-f corresponds aux coefficients du filtre MMSE recherché. On remarque que son expression dépend bien du bruit, mais également d'un retard $d$.\\
+Le vecteur f correspond aux coefficients du filtre MMSE recherché. On remarque que son expression dépend bien du bruit, mais également d'un retard $d$.\\
 Il nous reste donc à choisir un retard optimal. Il a été prouvé cela revient à maximiser l'expression suivante :
 \[
 \left\| \left( H \cdot H^{*} + \sigma^{2} \cdot I \right)^{-1/2} H \cdot e_{d+1} \right\|^{2}
