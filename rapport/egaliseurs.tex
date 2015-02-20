@@ -152,7 +152,8 @@ Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la 
                 \caption{Constellation de symboles après transmission via le canal $h_3$}
         \end{subfigure}%
 \end{figure}
-	On remarque qu'il y a de l'interférence entre symbole introduite par chaque canal. Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
+	On remarque que le canal 1 n'est que très peu touché par des interférences entre symbole et qu'il est tout de même possible de détecter sans erreur les symboles, à l'inverse des deux autre canaux. En effet le canal 2 possède une ambiguïté sur le symbole reçu en 0. Enfin le 3ème canal est très touché par ces interférences et certains symboles se retrouvent dans la mauvaise zone de détection ce qui entraîne des erreurs de décision.\\
+Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
 
 \section{Égaliseur ZF}
 	Le première méthode d'égalisation que nous allons implémenter est l'égaliseur ZF. Le principe de cette méthode est d'inverser la réponse fréquentielle $H(z)$ du canal considéré.\\
@@ -173,31 +174,80 @@ La solution est alors
 	\boxed{\underline{f} = (H\cdot H^*)^{-1}H}
 \]
 \\
+Il reste encore à déterminer le retard $d$. En pratique, il sera choisi de manière à minimiser l'énergie de l'IES résiduelle, ce qui est exprimée par la formule suivante :
+\[
+	\hat{d} = argmin \left\| (I-H^{*}(HH^{*})^{-1}H)e_{d+1} \right\|
+\]
 \\
 
 Nous allons à présent voir comment notre implémentation du filtre ZF sur \textsc{MATLAB} gère les distorsions engendrées par les trois différents canaux utilisé dans le cadre de ce TP.
-%
-%	FIGFIGFIGFIGFIGFIGFIG
-%
+
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/rf_h1_ZF.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/rf_h2_ZF.png}
+        \end{figure}%
+        \begin{figure}[h]
+        \centering
+                \includegraphics[scale=0.6]{img/rf_h3_ZF.png}
+        \end{figure}%
 
 Les réponses fréquentielles des égaliseurs sont bien, comme on peut l'observer sur les figures, l'inverse des réponses des différents canaux. \\
+
 De plus, la forte sélectivité en fréquence des canaux se manifeste par des pics de résonance dans la réponse fréquentielle des égaliseurs.
-%
-%	FIGFIGFIGFIGFIGFIGFIG
-%
+
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h1_ZF.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h2_ZF.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h3_ZF.png}
+        \end{figure}%
 
 Pour ce qui est des performances de l'égaliseur, pour le premier canal la méthode semble relativement bien adaptée, même si l'on reste assez loin du TEB théorique sans IES représenté par la courbe du canal AWGN. Cependant, pour les canaux 2 et 3, même avec un SNR élevé il est difficile d'obtenir un TEB faible du fait de la forte sélectivité en fréquence de ces deux canaux.
 \\
 De plus, si l'on calcule l'énergie de l'IES en sortie de l'égaliseur dont l'expression théorique est la suivante
 \[ E[|\widetilde{\epsilon_n}|^{2}] = \left\| (I-H^{*}(HH^{*})^{-1}H)e_{d+1} \right\|^{2} \]
 On peut remarquer que si le filtre est sélectif en fréquence alors l'énergie de l'IES sera d'autant plus grande.
-En effet,
 \begin{itemize}
-%
-%	TODOTODOTODOTODOTODOTODOTODO
-%
+	\item \textbf{IES - canal 1} : $0$ J
+	\item \textbf{IES - canal 2} : $0.945 \cdot 10^{-5}$ J
+	\item \textbf{IES - canal 3} : $0.945$ J\\
 \end{itemize}
+\\
+\\
 
+Nous allons à présent tracer les périodogrammes du bruit seul en sortie des égaliseurs des trois canaux.
+
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perio_h1_ZF.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perio_h2_ZF.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perio_h3_ZF.png}
+        \end{figure}%
+
+L'énergie du bruit en sortie de l'égaliseur ZF a pour expression
+\[
+	\[ E[|\widetilde{W_n}^{2}|] = \simga^{2} \left\|(HH^{*})^{-1} H e_{d+1} \right\|^{2} \]
+\]
+Ce résultat implique que si $(HH^{*})^{-1} \rightarrow 0$, alors l'énergie en sortie peut être élevée.
+\\
+
+Au vu des résultats précédents, on remarque que le filtre ZF, qui se base sur l'inversion de la réponse fréquentielle du canal qu'il cherche à égalisee, a des performances correctes pour des canaux peu sélectif en fréquence. Dans le cas contraire, le filtre va amplifier certaines fréquences et rendre l'égalisation impossible même avec un SNR très élevé.
 
 \section{Égaliseur MMSE}
 
@@ -232,6 +282,13 @@ Il est alors possible de déterminer les coefficients du filtre MMSE.
 
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
+
+En résumé, l'objectif de ce TP a été la mise en place de différentes techniques d'égalisation pour pallier aux distorsions introduites par le canal de propagation. Notre étude s'est basée sur trois canaux représentant chacun différents degrés de sélectivité en fréquence.\\
+La première méthode implémentée a été celle du Zero-Forcing. Bien qu'elle soit efficace pour des canaux peu sélectifs en fréquence, les performances diminuent rapidement pour des canaux sélectifs.\\
+Le second égaliseur utilisé a été le MMSE.
+%
+% TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
+%
 
 
 

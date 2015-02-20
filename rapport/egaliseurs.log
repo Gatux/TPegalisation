@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.11.21)  20 FEB 2015 19:40
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.11.21)  20 FEB 2015 19:50
 entering extended mode
 **egaliseurs.tex
 (C:\Users\Gatux\Documents\GitHub\TPegalisation\rapport\egaliseurs.tex
@@ -1179,55 +1179,224 @@ Underfull \hbox (badness 10000) in paragraph at lines 152--152
  []
 
 [3 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/rf.png (PNG copy)>]
-Overfull \hbox (4.30713pt too wide) in paragraph at lines 167--170
+Overfull \hbox (4.30713pt too wide) in paragraph at lines 168--171
 \T1/futs/m/n/10.95 so-lu-tion au sens des moindres car-rés. On cherche alors le vec-teur $[]$ qui mi-ni-mise la re-la-ti
 on $[]$. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 174--177
+Underfull \hbox (badness 10000) in paragraph at lines 180--182
+
+ []
+
+<img/rf_h1_ZF.png, id=26, 736.40637pt x 331.44518pt>
+File: img/rf_h1_ZF.png Graphic file (type png)
+ <use img/rf_h1_ZF.png>
+Package pdftex.def Info: img/rf_h1_ZF.png used on input line 187.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+
+<img/rf_h2_ZF.png, id=27, 736.40637pt x 331.44518pt>
+File: img/rf_h2_ZF.png Graphic file (type png)
+ <use img/rf_h2_ZF.png>
+Package pdftex.def Info: img/rf_h2_ZF.png used on input line 191.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+ [4 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/const1.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub/T
+Pegalisation/rapport/img/const2.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/const3.png (P
+NG copy)>]
+<img/rf_h3_ZF.png, id=31, 736.40637pt x 331.44518pt>
+File: img/rf_h3_ZF.png Graphic file (type png)
+ <use img/rf_h3_ZF.png>
+Package pdftex.def Info: img/rf_h3_ZF.png used on input line 195.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 198--199
+
+ []
+
+<img/perf_h1_ZF.png, id=32, 736.40637pt x 331.44518pt>
+File: img/perf_h1_ZF.png Graphic file (type png)
+ <use img/perf_h1_ZF.png>
+Package pdftex.def Info: img/perf_h1_ZF.png used on input line 204.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+
+<img/perf_h2_ZF.png, id=33, 736.40637pt x 331.44518pt>
+File: img/perf_h2_ZF.png Graphic file (type png)
+ <use img/perf_h2_ZF.png>
+Package pdftex.def Info: img/perf_h2_ZF.png used on input line 208.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+ [5 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/rf_h1_ZF.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub
+/TPegalisation/rapport/img/rf_h2_ZF.png (PNG copy)>] <img/perf_h3_ZF.png, id=37, 736.40637pt x 331.44518pt>
+File: img/perf_h3_ZF.png Graphic file (type png)
+ <use img/perf_h3_ZF.png>
+Package pdftex.def Info: img/perf_h3_ZF.png used on input line 212.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+ [6 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/rf_h3_ZF.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub
+/TPegalisation/rapport/img/perf_h1_ZF.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/perf_h2
+_ZF.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 223--224
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 174--177
-
- []
-
-[4 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/const1.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub/TP
-egalisation/rapport/img/const2.png (PNG copy)> <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/const3.png (PN
-G copy)>]
-
-! LaTeX Error: Something's wrong--perhaps a missing \item.
+! LaTeX Error: There's no line here to end.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.199 \end{itemize}
-                   
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+l.226 \\
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
-[5] (C:\Users\Gatux\Documents\GitHub\TPegalisation\rapport\egaliseurs.aux) ) 
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.227 
+      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+<img/perio_h1_ZF.png, id=41, 736.40637pt x 331.44518pt>
+File: img/perio_h1_ZF.png Graphic file (type png)
+ <use img/perio_h1_ZF.png>
+Package pdftex.def Info: img/perio_h1_ZF.png used on input line 232.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+
+<img/perio_h2_ZF.png, id=42, 736.40637pt x 331.44518pt>
+File: img/perio_h2_ZF.png Graphic file (type png)
+ <use img/perio_h2_ZF.png>
+Package pdftex.def Info: img/perio_h2_ZF.png used on input line 236.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+
+<img/perio_h3_ZF.png, id=43, 736.40637pt x 331.44518pt>
+File: img/perio_h3_ZF.png Graphic file (type png)
+ <use img/perio_h3_ZF.png>
+Package pdftex.def Info: img/perio_h3_ZF.png used on input line 240.
+(pdftex.def)             Requested size: 441.84723pt x 198.86862pt.
+ [7 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/perf_h3_ZF.png (PNG copy)> <C:/Users/Gatux/Documents/GitH
+ub/TPegalisation/rapport/img/perio_h1_ZF.png (PNG copy)>]
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 	\[
+          E[|\widetilde{W_n}^{2}|] = \simga^{2} \left\|(HH^{*})^{-1} H e_{d+...
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Undefined control sequence.
+l.245 	\[ E[|\widetilde{W_n}^{2}|] = \simga
+                                           ^{2} \left\|(HH^{*})^{-1} H e_{d+...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.245 ...\|(HH^{*})^{-1} H e_{d+1} \right\|^{2} \]
+                                                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.246 \]
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: \begin{document} ended by \end{equation*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.246 \]
+        
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.246 \]
+        
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.246 \]
+        
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+! Extra \endgroup.
+<recently read> \endgroup 
+                          
+l.246 \]
+        
+Things are pretty mixed up, but I think the worst is over.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 246--249
+
+ []
+
+[8 <C:/Users/Gatux/Documents/GitHub/TPegalisation/rapport/img/perio_h2_ZF.png (PNG copy)> <C:/Users/Gatux/Documents/GitH
+ub/TPegalisation/rapport/img/perio_h3_ZF.png (PNG copy)>] [9]
+(C:\Users\Gatux\Documents\GitHub\TPegalisation\rapport\egaliseurs.aux) ) 
 Here is how much of TeX's memory you used:
- 24819 strings out of 493921
- 593390 string characters out of 3144875
+ 24864 strings out of 493921
+ 594320 string characters out of 3144875
  768676 words of memory out of 3000000
- 27604 multiletter control sequences out of 15000+200000
+ 27640 multiletter control sequences out of 15000+200000
  102556 words of font info for 127 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  62i,9n,76p,707b,609s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc
-/dvips/fontname/8r.enc} <C:\Users\Gatux\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ectt1200.pk><C:/User
-s/Gatux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier-mex.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9
-/fonts/type1/public/fourier/fourier-ml.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier
--mlit.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier-ms.pfb><C:/Program Files (x86)/M
-iKTeX 2.9/fonts/type1/adobe/utopia/putb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/adobe/utopia/putr8a.pfb><C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/adobe/utopia/putri8a.pfb>
-Output written on egaliseurs.pdf (5 pages, 109688 bytes).
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvi
+ps/fontname/8r.enc} <C:\Users\Gatux\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi600\ectt1200.pk><C:/Users/Ga
+tux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier-mex.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9/fon
+ts/type1/public/fourier/fourier-ml.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier-mli
+t.pfb><C:/Users/Gatux/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/fourier/fourier-ms.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/adobe/utopia/putb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/adobe/utopia/putr8a.pfb><C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/adobe/utopia/putri8a.pfb>
+Output written on egaliseurs.pdf (9 pages, 225808 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
+ 101 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 78 words of extra memory for PDF output out of 10000 (max. 10000000)
 
