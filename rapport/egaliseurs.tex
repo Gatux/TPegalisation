@@ -251,18 +251,40 @@ Au vu des résultats précédents, on remarque que le filtre ZF, qui se base sur l'
 \section{Égaliseur MMSE}
 
 
+A présent, nous allons étudier les performances de notre égaliseur MMSE implémenté sur \textsc{MATLAB}.
 
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h1_MMSE.png}
+        \end{figure}%
+        \begin{figure}[H]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h2_MMSE.png}
+        \end{figure}%
+        \begin{figure}[h]
+        \centering
+                \includegraphics[scale=0.6]{img/perf_h3_MMSE.png}
+        \end{figure}%
+
+Dans les trois cas, les performances sont meilleures que celles du filtre ZF, même si pour les canaux 2 et 3 le TEB reste toujours relativement élevé par rapport au canal AWGN.
+\\
+
+L'expression théorique de l'énergie de l'IES en sortie de l'égaliseur est la suivante :
+\[ E[|\widetilde{\epsilon_n}|^{2}] = 1-\left\| (HH^{*}+\sigma^2I)^{-\frac{1}{2}}He_{d+1} \right\|^{2} \]
+Les énergies calculées pour les trois canaux avec un SNR de 10dB sont :
+\begin{itemize}
+	\item \textbf{IES - canal 1} : $0.056742$ J
+	\item \textbf{IES - canal 2} : $0.081734$ J
+	\item \textbf{IES - canal 3} : $0.193603$ J\\
+\end{itemize}
+Comme pour ZF, l'énergie de l'IES est d'autant plus grande que le canal est sélectif en fréquence.
 
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}
 
 En résumé, l'objectif de ce TP a été la mise en place de différentes techniques d'égalisation pour pallier aux distorsions introduites par le canal de propagation. Notre étude s'est basée sur trois canaux représentant chacun différents degrés de sélectivité en fréquence.\\
 La première méthode implémentée a été celle du Zero-Forcing. Bien qu'elle soit efficace pour des canaux peu sélectifs en fréquence, les performances diminuent rapidement pour des canaux sélectifs.\\
-Le second égaliseur utilisé a été le MMSE.
-%
-% TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
-%
-
+Le second égaliseur utilisé a été le MMSE dont nous l'avons par rapport à l'égaliseur ZF et il s'est montré plus performant que ce dernier sur chacun des canaux.
 
 
 \end{document}
