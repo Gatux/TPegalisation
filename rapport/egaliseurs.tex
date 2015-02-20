@@ -49,11 +49,10 @@ Cela est dû à quatre causes principales :
 	\item la mobilité du récepteur et/ou de l'émetteur ;
 	\item le multitrajet de l'onde (i.e. lorsque la même onde passe par des chemins différents et arrive à un même récepteur introduisant ainsi des interférences).\\
 \end{itemize}
-\\
-\\
+
 
 \newline
-Afin de caractériser un canal, on utilise $\Delta_{\tau}$ qui est l'étalement temporel du canal et $T_c$ le temps de cohérence du canal. On notera $T_s$ le temps symbole. Le canal de propagation peut être séléctif en temps et/ou en fréquence. 
+Afin de caractériser un canal, on utilise $\Delta_{\tau}$ qui est l'étalement temporel du canal et $T_c$ le temps de cohérence du canal. On notera $T_s$ le temps symbole. Le canal de propagation peut être sélectif en temps et/ou en fréquence. 
 \\
 Le canal de propagation varie au cours du temps et la sélectivité en temps nous permet de savoir à quelle fréquence il est nécessaire de l'estimer afin de compenser ses effets. On dit qu'il est sélectif en temps si $T_s > T_c$, dans ce cas, on passe plus de temps à estimer le canal qu'à communiquer.
 \\
@@ -133,7 +132,7 @@ Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la 
 		\includegraphics[scale=0.6]{img/rf.png}
 		\caption{Réponses fréquentielles des trois canaux $h_1$, $h_2$ et $h_3$}
 	\end{figure}
-	\\
+	
 	On remarque que les canaux présentent différentes sélectivités en fréquence avec $h_1$ le moins sélectif et $h_3$ le plus sélectif.
 	Nous allons à présent transmettre une séquence de $N=5000$ symboles BPSK à travers ces canaux avec un SNR de $20 dB$. On obtient alors les constellations suivantes :
 	\begin{figure}[H]
@@ -153,7 +152,8 @@ Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la 
                 \caption{Constellation de symboles après transmission via le canal $h_3$}
         \end{subfigure}%
 \end{figure}
-	On remarque qu'il y a de l'interférence entre symbole introduite par chaque canal. Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
+	On remarque que le canal 1 n'est que très peu touché par des interférences entre symbole et qu'il est tout de même possible de détecter sans erreur les symboles, à l'inverse des deux autre canaux. En effet le canal 2 possède une ambiguïté sur le symbole reçu en 0. Enfin le 3ème canal est très touché par ces interférences et certains symboles se retrouvent dans la mauvaise zone de détection ce qui entraîne des erreurs de décision.\\
+Le but des parties suivantes va être de se débarasser de ces distorsions, afin de décoder le message envoyé. 
 
 \section{Égaliseur ZF}
 	Le première méthode d'égalisation que nous allons implémenter est l'égaliseur ZF. Le principe de cette méthode est d'inverser la réponse fréquentielle $H(z)$ du canal considéré.\\
@@ -164,7 +164,7 @@ Pour retrouver le symbole $Z_n$ à partir des données reçus $y_n$, on utilise la 
 \]
 Le but final est d'obtenir $Z_n$. En se basant sur l'équation précédente, on trouve la relation permettant de concevoir le filtre ZF : 
 \[
-	H^*\underline{f} = \underline{e_{d+1}}}
+	H^*\underline{f} = \underline{e_{d+1}}
 \]
 où $d$ est un retard à choisir.\\
 Le système obtenu est sur-déterminé et n'admet pas de solutions en général. En pratique, on cherche la solution au sens des moindres carrés. On cherche alors le vecteur $\underline{f}$ qui minimise la relation $\left\| H^*\underline{f} - \underline{e_{d+1}} \right\|$.
@@ -196,7 +196,8 @@ Nous allons à présent voir comment notre implémentation du filtre ZF sur \textsc
         \end{figure}%
 
 Les réponses fréquentielles des égaliseurs sont bien, comme on peut l'observer sur les figures, l'inverse des réponses des différents canaux. \\
-De plus, la forte sélectivité en fréquence des canaux se manifeste par des pics de résonnance dans la réponse fréquentielle des égaliseurs.
+
+De plus, la forte sélectivité en fréquence des canaux se manifeste par des pics de résonance dans la réponse fréquentielle des égaliseurs.
 
         \begin{figure}[H]
         \centering
@@ -250,6 +251,34 @@ Au vu des résultats précédents, on remarque que le filtre ZF, qui se base sur l'
 
 \section{Égaliseur MMSE}
 
+La seconde méthode employée est celle utilisant un filtre MMSE (Minimum Mean Square Error). Ce filtre a l'avantage de tenir compte du bruit, ce qui lui permet d'être plus performances que le filtre ZF. Le principe de ce filtre est de minimiser l'erreur quadratique moyenne entre la sortie de l'égaliseur et le symbole que l'on souhaite estimer. Cela se traduire par l'équation suivante :
+\[
+F(z) = \underbrace{argmin}_{\tilde{F}(z)}( E\left[ \left| \tilde{F}(z) \cdot y_{n}-S_{n-d} \right| ^{2}\right])
+\]
+Comme précédemment avec le filtre ZF, le filtre MMSE est de type RIF. On défini alors une fonction de coût J que l'on souhaite minimiser :
+\[
+J(f) = E \left[ \left|f \cdot y_n - s_{n-d} \right| ^{2} \right]
+\]
+Cette fonction peut également s'écrire sous cette forme :
+\[
+J(f) = f^{*} \left( H \cdot H^{*} + \sigma^{2} \cdot I \right) f + 1 - 2 Re \left( f^{*} \cdot H \cdot e_{d+1} \right)
+\]
+Avec :
+\[
+f = \left( H \cdot H^{*} + \sigma^{2} \cdot I \right)^{-1} H \cdot e_{d+1}
+\]
+f corresponds aux coefficients du filtre MMSE recherché. On remarque que son expression dépend bien du bruit, mais également d'un retard $d$.\\
+Il nous reste donc à choisir un retard optimal. Il a été prouvé cela revient à maximiser l'expression suivante :
+\[
+\left\| \left( H \cdot H^{*} + \sigma^{2} \cdot I \right)^{-1/2} H \cdot e_{d+1} \right\|^{2}
+\]
+d'où :
+\[
+\hat{d} = \underbrace{argmax}_{d} \left\| \left( H \cdot H^{*} + \sigma^{2} \cdot I \right)^{-1/2} H \cdot e_{d+1} \right\|^{2}
+\]
+
+Il est alors possible de déterminer les coefficients du filtre MMSE.\\
+\\
 
 A présent, nous allons étudier les performances de notre égaliseur MMSE implémenté sur \textsc{MATLAB}.
 
