@@ -59,6 +59,9 @@ zDFE=zeros(N,length(SNR)); % sortie de l'égaliseur DFE
 bitsDFE=zeros(N,length(SNR)); % bits estimés après DFE
 berDFE=zeros(1,length(SNR)); % BER après DFE
 
+% Generation du bruit
+bruit = randn(size(s));
+
 % Filtre ZF
 % Matrice H
 H = conv2(h, eye(P))';
@@ -79,30 +82,37 @@ eZF(dZF) = 1;
 Eies = norm(eZF)-norm((H')*(pinv(H)')*eZF);
 
 fZF = (pinv(H)')*eZF;
+
 %%
 for i=1:length(SNR) 
     
-    %y =  filter(h, 1, s); % Observations en sortie du canal, A COMPLETER
-    %y = y(K:end);
-    y= awgn(filter(h,1,s),SNR(i)); % Observations en sortie du canal
+    y= filter(h,1,s) + bruit*sigma(i); % Observations en sortie du canal
     
     % Filtre MMSE
-    dMMSE= 0; % retard optimal du filtre MMSE, A COMPLETER
-    fMMSE= 0;  % vecteur colonne des coefficients du filtre MMSE, A COMPLETER
+        % Retard optimal
+        Y = (H*(H') + (sigma(i)^2)*eye(P))^(-1/2) * H;
+        for k = 1:length(Y)
+            normMMSE(k) = norm(Y(:,k));
+        end
+        [~, dMMSE] = max(normMMSE); % retard optimal du filtre MMSE
+        eMMSE = zeros(P+K-1, 1);
+        eMMSE(dMMSE) = 1;
+        
+        fMMSE = ((H*(H') + (sigma(i)^2)*eye(P)))^(-1) * H * eMMSE; % vecteur colonne des coefficients du filtre MMSE, A COMPLETER
     
     % Filtre DFE
-    dDFE= 0; % retard optimal du filtre DFE, A COMPLETER
-    fDFE= 0; % coefficients du filtre DFE, A COMPLETER
+    %dDFE= 0; % retard optimal du filtre DFE, A COMPLETER
+    %fDFE= 0; % coefficients du filtre DFE, A COMPLETER
     
     % Egalisation ZF/MMSE
     for n=P+K-1:N 
         zZF(n,i)=real(fZF'*y(n:-1:n-P+1));
-        %zMMSE(n,i)=real(fMMSE'*y(n:-1:n-P+1));  
+        zMMSE(n,i)=real(fMMSE'*y(n:-1:n-P+1));  
     end
     bitsZF(:,i)=real(zZF(:,i)) > 0; 
     berZF(:,i)=sum(abs(bits(P+K-1-(dZF-1):N-(dZF-1))-bitsZF(P+K-1:N,i)),1)/(N-(P+K-2)); 
-    %bitsMMSE(:,i)=real(zMMSE(:,i)) > 0; 
-    %berMMSE(i)=sum(abs(bits(P+K-1-(dMMSE-1):N-(dMMSE-1))-bitsMMSE(P+K-1:N,i)),1)/(N-(P+K-2)); 
+    bitsMMSE(:,i)=real(zMMSE(:,i)) > 0; 
+    berMMSE(i)=sum(abs(bits(P+K-1-(dMMSE-1):N-(dMMSE-1))-bitsMMSE(P+K-1:N,i)),1)/(N-(P+K-2)); 
     
     % Egalisation DFE
 %     M=max(P+K-1,Q+dDFE+1);
@@ -145,6 +155,5 @@ title('Performances de l''�galiseur avec le canal 1');
 
 %% Periodogrammes
 bruit = awgn(zeros(1,5000), 10);
-sortieCanal = filter(h, 1, bruit);
-sortieEgaliseur = filter(fZF, 1, sortieCanal);
+sortieEgaliseur = filter(fZF, 1, bruit);
 periodogram(sortieEgaliseur);
